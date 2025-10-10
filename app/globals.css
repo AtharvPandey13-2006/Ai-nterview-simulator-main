@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated to light, bright teal color palette for attracting freshers and job seekers */
+  --background: #ffffff; /* Clean white background for modern, welcoming feel */
+  --foreground: #4b5563; /* Dark gray for primary text - professional yet approachable */
+  --card: #f0fdfa; /* Very light teal for card backgrounds - fresh and inviting */
+  --card-foreground: #4b5563; /* Text on cards */
+  --popover: #ffffff; /* Popover background */
+  --popover-foreground: #4b5563; /* Popover text */
+  --primary: #0d9488; /* Bright teal for primary actions - energetic and attractive */
+  --primary-foreground: #ffffff; /* White text on primary actions */
+  --secondary: #14b8a6; /* Brighter teal for secondary actions - engaging accent */
+  --secondary-foreground: #ffffff; /* White text on secondary actions */
+  --muted: #f0fdfa; /* Very light teal for muted sections - soft and welcoming */
+  --muted-foreground: #374151; /* Darker gray for muted text */
+  --accent: #14b8a6; /* Bright teal for accents - engaging for young professionals */
+  --accent-foreground: #ffffff; /* White text on accent elements */
+  --destructive: #dc2626; /* Professional red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text on destructive actions */
+  --border: #e5e7eb; /* Light gray for borders */
+  --input: #ffffff; /* White for input fields */
+  --ring: rgba(13, 148, 136, 0.5); /* Teal focus rings */
+  --chart-1: #f0fdfa; /* Light teal chart color */
+  --chart-2: #14b8a6; /* Bright teal chart color */
+  --chart-3: #0d9488; /* Primary teal chart color */
+  --chart-4: #06b6d4; /* Cyan teal chart color */
+  --chart-5: #dc2626; /* Red chart color */
+  --radius: 0.5rem; /* Rounded corners for modern feel */
+  --sidebar: #ffffff; /* White sidebar background */
+  --sidebar-foreground: #4b5563; /* Text in sidebar */
+  --sidebar-primary: #f0fdfa; /* Light teal primary in sidebar */
+  --sidebar-primary-foreground: #374151; /* Text on primary sidebar actions */
+  --sidebar-accent: #0d9488; /* Teal accent in sidebar */
+  --sidebar-accent-foreground: #ffffff; /* Text on sidebar accents */
+  --sidebar-border: #e5e7eb; /* Border color for sidebar */
+  --sidebar-ring: rgba(13, 148, 136, 0.5); /* Focus ring for sidebar elements */
+}
+
+.dark {
+  /* Updated dark mode colors to complement the light, bright teal theme */
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #1e293b;
+  --popover-foreground: #f1f5f9;
+  --primary: #0d9488; /* Keep bright teal in dark mode */
+  --primary-foreground: #ffffff;
+  --secondary: #14b8a6; /* Keep bright teal in dark mode */
+  --secondary-foreground: #ffffff;
+  --muted: #334155;
+  --muted-foreground: #94a3b8;
+  --accent: #14b8a6; /* Keep bright teal in dark mode */
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #334155;
+  --input: #1e293b;
+  --ring: rgba(13, 148, 136, 0.5);
+  --chart-1: #f0fdfa;
+  --chart-2: #14b8a6;
+  --chart-3: #0d9488;
+  --chart-4: #06b6d4;
+  --chart-5: #dc2626;
+  --sidebar: #1e293b;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #f0fdfa;
+  --sidebar-primary-foreground: #374151;
+  --sidebar-accent: #0d9488;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #334155;
+  --sidebar-ring: rgba(13, 148, 136, 0.5);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Updated fonts to match design brief - Geist Sans and Manrope */
+@import url("https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap");
+
+.font-geist-sans {
+  font-family: "Geist Sans", sans-serif;
+}
+
+.font-manrope {
+  font-family: "Manrope", sans-serif;
+}
+
+/* Updated compatibility classes to use new attractive fonts */
+.font-geist {
+  font-family: "Geist Sans", sans-serif;
+}
+
+.font-manrope {
+  font-family: "Manrope", sans-serif;
+}
+
+.font-playfair {
+  font-family: "Geist Sans", sans-serif;
+}
+
+.font-source-sans {
+  font-family: "Manrope", sans-serif;
+}
+
+.font-work-sans {
+  font-family: "Geist Sans", sans-serif;
+}
+
+.font-open-sans {
+  font-family: "Manrope", sans-serif;
+}
+
+.font-space-grotesk {
+  font-family: "Geist Sans", sans-serif;
+}
+
+.font-dm-sans {
+  font-family: "Manrope", sans-serif;
+}

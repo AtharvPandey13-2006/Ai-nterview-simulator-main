@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Interview Simulator - Practice & Excel</title>
+
+  <!-- React and Babel -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Added Google Fonts for better typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Added custom styles for enhanced design -->
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Poppins', sans-serif; }
+    /* Updated gradient to use teal colors */
+    .gradient-bg { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+    .glass-effect { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.1); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .pulse-animation { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    .float-animation { animation: float 6s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    /* Updated glow effect to use teal color */
+    .glow-on-hover:hover { box-shadow: 0 0 30px rgba(20, 184, 166, 0.3); }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-teal-50 min-h-screen overflow-x-hidden">
+
+  <!-- Updated background gradient to use teal colors -->
+  <div class="fixed inset-0 z-0">
+    <div class="absolute inset-0 gradient-bg opacity-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-100/50"></div>
+    <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-teal-400/20 to-cyan-400/20 rounded-full blur-xl float-animation"></div>
+    <div class="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-teal-500/20 to-emerald-400/20 rounded-full blur-xl float-animation" style="animation-delay: -3s;"></div>
+  </div>
+
+  <!-- Enhanced topbar with better styling -->
+  <div class="relative z-10">
+    <!-- Updated topbar gradient to use teal colors -->
+    <div class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm py-3 px-6 flex justify-between items-center shadow-lg">
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-2">📍 India</span>
+        <span class="hidden sm:flex items-center gap-2">🌐 AI Mock Interview Platform</span>
+      </div>
+      <div class="flex items-center gap-2">📞 Contact: +91-9876543210</div>
+    </div>
+
+    <!-- Enhanced navbar with glass effect and better typography -->
+    <div class="glass-effect border-b border-white/20 py-4 px-6 shadow-xl flex justify-between items-center">
+      <!-- Updated brand gradient to use teal colors -->
+      <div class="text-2xl font-display font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
+        🚀 AI Interview Simulator
+      </div>
+
+      <!-- User Dropdown - preserved functionality -->
+      <div class="relative inline-block">
+        <!-- Updated user button to use teal colors -->
+        <button id="userDropdownBtn" class="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-2.5 rounded-xl shadow-lg transition-all duration-200 flex items-center gap-2 font-medium glow-on-hover">
+          👤 User <span class="text-xs">▾</span>
+        </button>
+        <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-52 bg-white/95 backdrop-blur-md text-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-200/50 z-50">
+          <!-- Updated dropdown hover colors to use teal -->
+          <a href="user.html" class="block px-6 py-4 hover:bg-teal-50 flex items-center gap-3 transition-colors duration-200 border-b border-gray-100/50">
+            <span class="text-lg">📊</span> 
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a href="settings.html" class="block px-6 py-4 hover:bg-teal-50 flex items-center gap-3 transition-colors duration-200 border-b border-gray-100/50">
+            <span class="text-lg">⚙️</span> 
+            <span class="font-medium">Settings</span>
+          </a>
+          <a href="logout" class="block px-6 py-4 hover:bg-red-50 flex items-center gap-3 transition-colors duration-200 text-red-600">
+            <span class="text-lg">🚪</span> 
+            <span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced hero section with better typography and spacing -->
+  <section class="relative z-10 px-6 py-16 text-center max-w-6xl mx-auto">
+    <div class="space-y-6">
+      <h1 class="text-5xl md:text-6xl font-display font-extrabold text-gray-800 leading-tight">
+        Welcome to <br>
+        <!-- Updated hero gradient to use teal colors -->
+        <span class="bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-600 bg-clip-text text-transparent">
+          AI Interview Simulator
+        </span>
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 font-medium max-w-3xl mx-auto leading-relaxed">
+        Master your interview skills with AI-powered practice sessions
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 text-lg text-gray-500 font-medium">
+        <span class="flex items-center gap-2">💻 DSA Questions</span>
+        <span class="flex items-center gap-2">🏗️ System Design</span>
+        <span class="flex items-center gap-2">👥 HR Interviews</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- React Root -->
+  <div id="root" class="relative z-10 w-full max-w-6xl mx-auto px-6 mb-16"></div>
+
+  <!-- React App -->
+  <script type="text/babel">
+    "use client"
+
+    const { useState, useEffect, useRef } = React
+
+    function App() {
+      console.log("[v0] App component initializing...")
+
+      const [role, setRole] = useState("")
+      const [interviewStarted, setInterviewStarted] = useState(false)
+      const [question, setQuestion] = useState("")
+      const [answer, setAnswer] = useState("")
+      const [feedback, setFeedback] = useState(null)
+      const [isRecording, setIsRecording] = useState(false)
+      const [error, setError] = useState(null)
+      const [loading, setLoading] = useState(false)
+      const [questionIndex, setQuestionIndex] = useState(0)
+      const recognitionRef = useRef(null)
+      const [showScorecard, setShowScorecard] = useState(false)
+      const [scoreData, setScoreData] = useState({
+        score: 0,
+        strengths: [],
+        weaknesses: [],
+      })
+
+      const backendBaseUrl = "http://localhost:8080"
+
+      useEffect(() => {
+        console.log("[v0] Component mounted, fetching user data...")
+        fetch(`${backendBaseUrl}/api/user/me`, {
+          credentials: "include",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.email) {
+              sessionStorage.setItem("userEmail", data.email)
+              console.log("✅ Logged in as:", data.email)
+            }
+            if (data?.name) {
+              sessionStorage.setItem("userName", data.name)
+              console.log("👤 Name:", data.name)
+            }
+          })
+          .catch((err) => {
+            console.error("⚠️ Could not fetch user email from session:", err)
+          })
+      }, [])
+
+      useEffect(() => {
+        console.log("[v0] Setting up speech recognition...")
+        if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+          setError("Speech Recognition API not supported in this browser.")
+          return
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+        const recognition = new SpeechRecognition()
+        recognition.continuous = false
+        recognition.interimResults = true
+        recognition.lang = "en-US"
+
+        recognition.onstart = () => setIsRecording(true)
+        recognition.onend = () => setIsRecording(false)
+        recognition.onerror = (event) => setError("Speech Recognition error: " + event.error)
+        recognition.onresult = (event) => {
+          let finalTranscript = ""
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript
+            }
+          }
+          setAnswer(finalTranscript)
+        }
+
+        recognitionRef.current = recognition
+        console.log("[v0] Speech recognition setup complete")
+      }, [])
+
+      const startInterview = async () => {
+        setError(null)
+        setQuestionIndex(1)
+        if (!role) {
+          setError("Please select a role before starting the interview.")
+          return
+        }
+
+        setLoading(true)
+        try {
+          const res = await fetch(`${backendBaseUrl}/api/interview/startInterview?role=${encodeURIComponent(role)}`, {
+            method: "GET",
+            credentials: "include",
+          })
+          if (!res.ok) throw new Error("Failed to start interview")
+          const questionText = await res.text()
+          setQuestion(questionText)
+          setInterviewStarted(true)
+          setFeedback(null)
+          setAnswer("")
+        } catch (e) {
+          setError(e.message)
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      const getNextQuestion = async () => {
+        setError(null)
+        setFeedback(null)
+        setAnswer("")
+        setLoading(true)
+
+        try {
+          if (questionIndex >= 5) {
+            setShowScorecard(true)
+            const res = await fetch(`${backendBaseUrl}/api/interview/score`, {
+              credentials: "include",
+            })
+            const data = await res.json()
+            console.log("SCORE DATA RECEIVED:", data)
+            setScoreData(data)
+            return
+          }
+
+          const res = await fetch(
+            `${backendBaseUrl}/api/interview/nextQuestion?role=${encodeURIComponent(role)}&questionIndex=${questionIndex}`,
+            {
+              method: "GET",
+              credentials: "include",
+            },
+          )
+
+          if (!res.ok) throw new Error("Failed to fetch next question")
+          const nextQ = await res.text()
+          setQuestion(nextQ)
+          setQuestionIndex((prev) => prev + 1)
+        } catch (e) {
+          setError(e.message)
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      const submitAnswer = async () => {
+        setError(null)
+        if (!answer.trim()) {
+          setError("Please provide an answer before submitting.")
+          return
+        }
+
+        setLoading(true)
+        try {
+          const res = await fetch(`${backendBaseUrl}/api/interview/submitAnswer`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ answer, question, role }),
+          })
+          if (!res.ok) throw new Error("Failed to submit answer")
+
+          const data = await res.json()
+          setFeedback(data.feedback)
+          setScoreData(data)
+        } catch (e) {
+          setError(e.message)
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      const toggleRecording = () => {
+        setError(null)
+        if (!recognitionRef.current) return
+        if (isRecording) {
+          recognitionRef.current.stop()
+        } else {
+          setAnswer("")
+          recognitionRef.current.start()
+        }
+      }
+
+      const roleData = [
+        {
+          name: "Frontend Developer",
+          icon: "🎨",
+          description: "React, Vue, Angular & UI/UX",
+          /* Updated role colors to use teal variations */
+          color: "from-teal-500 to-cyan-500",
+          bgGradient: "from-teal-50 to-cyan-50",
+        },
+        {
+          name: "Backend Developer",
+          icon: "⚙️",
+          description: "APIs, Databases & Server Logic",
+          color: "from-emerald-500 to-teal-500",
+          bgGradient: "from-emerald-50 to-teal-50",
+        },
+        {
+          name: "Software Engineer",
+          icon: "💻",
+          description: "Full-Stack Development",
+          color: "from-cyan-500 to-teal-500",
+          bgGradient: "from-cyan-50 to-teal-50",
+        },
+        {
+          name: "HR",
+          icon: "👥",
+          description: "Human Resources & Recruitment",
+          color: "from-teal-500 to-emerald-500",
+          bgGradient: "from-teal-50 to-emerald-50",
+        },
+        {
+          name: "Marketing Assistant",
+          icon: "📈",
+          description: "Digital Marketing & Analytics",
+          color: "from-cyan-500 to-blue-500",
+          bgGradient: "from-cyan-50 to-blue-50",
+        },
+        {
+          name: "Digital Strategist",
+          icon: "🎯",
+          description: "Strategy & Growth Planning",
+          color: "from-teal-600 to-cyan-600",
+          bgGradient: "from-teal-50 to-cyan-50",
+        },
+      ]
+
+      console.log("[v0] Rendering App component, interviewStarted:", interviewStarted, "role:", role)
+
+      return (
+        <div className="bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl w-full max-w-5xl mx-auto border border-white/20 glow-on-hover">
+          <div className="text-center mb-10">
+            <h1 className="text-4xl md:text-5xl font-display font-extrabold mb-4 bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+              🎙️ AI Interview Simulator
+            </h1>
+            <p className="text-lg text-gray-600 font-medium">
+              Choose your role and start practicing with AI-powered interviews
+            </p>
+          </div>
+
+          {!interviewStarted ? (
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {roleData.map((r, index) => {
+                  console.log("[v0] Rendering role card:", r.name, "index:", index)
+                  return (
+                    <button
+                      key={r.name}
+                      onClick={() => {
+                        console.log("[v0] Role selected:", r.name)
+                        setRole(r.name)
+                      }}
+                      className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 card-hover glow-on-hover ${
+                        role === r.name
+                          /* Updated selected role border to use teal */
+                          ? `border-teal-500 bg-gradient-to-br ${r.bgGradient} shadow-lg scale-105`
+                          : "border-gray-200 bg-white/50 hover:border-teal-300 hover:bg-white/80"
+                      }`}
+                    >
+                      <div className="text-center space-y-3">
+                        <div
+                          className={`text-4xl mb-2 ${role === r.name ? "scale-110" : "group-hover:scale-110"} transition-transform duration-300`}
+                        >
+                          {r.icon}
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-800">{r.name}</h3>
+                        <p className="text-sm text-gray-600 leading-relaxed">{r.description}</p>
+                        <div className={`h-1 w-16 mx-auto rounded-full bg-gradient-to-r ${r.color} opacity-60`}></div>
+                      </div>
+                      {role === r.name && (
+                        <div
+                          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${r.color} opacity-10 pointer-events-none`}
+                        ></div>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="text-center">
+                <button
+                  onClick={startInterview}
+                  /* Updated start button to use teal gradient */
+                  className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-4 px-12 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none glow-on-hover"
+                  disabled={loading || !role}
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-3">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Loading...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-3">🚀 Start Interview</span>
+                  )}
+                </button>
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl">
+                  <div className="flex items-center">
+                    <span className="text-red-500 text-xl mr-3">⚠️</span>
+                    <p className="text-red-700 font-medium">{error}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : showScorecard && scoreData ? (
+            <div className="space-y-6">
+              <div className="text-center mb-8">
+                /* Updated completion gradient to use teal colors */
+                <h2 className="text-3xl font-display font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+                  🏆 Interview Complete!
+                </h2>
+                <p className="text-gray-600">Here's your detailed performance analysis</p>
+              </div>
+
+              <div className="bg-gradient-to-br from-teal-50 to-cyan-50 p-8 rounded-2xl border border-teal-200">
+                <div className="text-center mb-6">
+                  /* Updated score color to use teal */
+                  <div className="text-5xl font-bold text-teal-600 mb-2">
+                    {scoreData.score}/{scoreData.maxScore || 100}
+                  </div>
+                  <p className="text-lg text-gray-600 font-medium">Overall Score</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-white/80 p-6 rounded-xl border border-green-200">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-green-700 mb-4">✅ Strengths</h3>
+                    <ul className="space-y-2">
+                      {(scoreData?.strengths || []).map((s, i) => (
+                        <li key={i} className="flex items-start gap-2 text-gray-700">
+                          <span className="text-green-500 mt-1">•</span>
+                          <span>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-white/80 p-6 rounded-xl border border-orange-200">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-orange-700 mb-4">📈 Areas to Improve</h3>
+                    <ul className="space-y-2">
+                      {(scoreData?.weaknesses || []).map((w, i) => (
+                        <li key={i} className="flex items-start gap-2 text-gray-700">
+                          <span className="text-orange-500 mt-1">•</span>
+                          <span>{w}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-4 mt-8">
+                  <button
+                    /* Updated try again button to use teal colors */
+                    className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center gap-2"
+                    onClick={() => window.location.reload()}
+                  >
+                    🔄 Try Again
+                  </button>
+                  <button
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center gap-2"
+                    onClick={() => window.open(`${backendBaseUrl}/api/interview/downloadPdf`, "_blank")}
+                  >
+                    📄 Download Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-8">
+               
+              <div className="bg-gradient-to-r from-teal-50 to-cyan-50 border-l-4 border-teal-500 p-6 rounded-2xl shadow-sm">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">❓</span>
+                  <div>
+                     
+                    <h3 className="text-xl font-bold text-teal-700 mb-2">Question {questionIndex}/5</h3>
+                    <p className="text-gray-800 leading-relaxed text-lg">{question}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="block text-lg font-semibold text-gray-700 flex items-center gap-2">
+                  <span>💭</span> Your Answer:
+                </label>
+                <textarea
+                  rows="6"
+                  /* Updated textarea focus colors to use teal */
+                  className="w-full border-2 border-gray-200 rounded-2xl p-4 text-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200 resize-none bg-white/80 backdrop-blur-sm"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder="Share your thoughts here or use voice recording..."
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-4 justify-center">
+                <button
+                  onClick={toggleRecording}
+                  className={`px-6 py-3 rounded-xl font-semibold text-white shadow-lg transition-all duration-300 flex items-center gap-2 ${
+                    isRecording
+                      ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 pulse-animation"
+                      : "bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800"
+                  }`}
+                >
+                  🎤 {isRecording ? "Stop Recording" : "Start Recording"}
+                </button>
+
+                <button
+                  onClick={submitAnswer}
+                  /* Updated submit button to use teal colors */
+                  className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white py-3 px-6 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>📤 Submit Answer</>
+                  )}
+                </button>
+
+                <button
+                  onClick={getNextQuestion}
+                  /* Updated next question button to use teal colors */
+                  className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-3 px-6 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Loading...
+                    </>
+                  ) : (
+                    <>➡️ Next Question</>
+                  )}
+                </button>
+              </div>
+
+              {scoreData?.feedback && (
+                /* Updated feedback background to use teal colors */
+                <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border-l-4 border-teal-500 p-6 rounded-2xl shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🤖</span>
+                    <div>
+                      /* Updated feedback header to use teal color */
+                      <h4 className="text-lg font-bold text-teal-700 mb-2">AI Feedback</h4>
+                      <p className="text-gray-700 leading-relaxed whitespace-pre-line">{scoreData.feedback}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl">
+                  <div className="flex items-center">
+                    <span className="text-red-500 text-xl mr-3">⚠️</span>
+                    <p className="text-red-700 font-medium">{error}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    try {
+      console.log("[v0] Attempting to render React app...")
+      const rootElement = document.getElementById("root")
+      if (!rootElement) {
+        console.error("[v0] Root element not found!")
+      } else {
+        console.log("[v0] Root element found, creating React root...")
+        const root = ReactDOM.createRoot(rootElement)
+        root.render(React.createElement(App))
+        console.log("[v0] React app rendered successfully!")
+      }
+    } catch (error) {
+      console.error("[v0] Error rendering React app:", error)
+    }
+  </script>
+
+  <!-- Dropdown Logic - preserved functionality -->
+  <script>
+    const btn = document.getElementById('userDropdownBtn');
+    const menu = document.getElementById('userDropdownMenu');
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('hidden');
+    });
+
+    window.addEventListener('click', () => {
+      menu.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

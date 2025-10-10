@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - AI Interview Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="app/enhanced-styles.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Manrope', sans-serif; }
+    .heading-font { font-family: 'Geist Sans', sans-serif; }
+    .modern-gradient { background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 50%, #f0fdf4 100%); }
+    .card-shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+    .primary-gradient { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
+    .accent-gradient { background: linear-gradient(135deg, #14b8a6 0%, #10b981 100%); }
+  </style>
+</head>
+<body class="bg-background text-foreground min-h-screen modern-gradient">
+  <header class="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-4 sm:space-x-8">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 primary-gradient rounded-xl flex items-center justify-center shadow-lg">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM12 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM12 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <span class="heading-font text-xl sm:text-2xl font-bold text-foreground">Dashboard</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="index.html" class="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+          Back to Interview
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div id="dashboard-root" class="max-w-7xl mx-auto p-4 sm:p-6 mt-8"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    function Dashboard() {
+      const [stats, setStats] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const chartRef = useRef(null);
+       const backendBaseUrl = 'https://atharvpandey13-2006-github-io-interview-1-kq9g.onrender.com';
+
+      useEffect(() => {
+        fetchUserStats();
+      }, []);
+
+      const fetchUserStats = async () => {
+        try {
+          const res = await fetch(`${backendBaseUrl}/api/interview/me`, {
+            credentials: 'include'
+          });
+          
+          if (!res.ok) throw new Error('Failed to fetch stats');
+          const data = await res.json();
+          setStats(data);
+          
+          // Initialize chart after stats are loaded
+          setTimeout(initializeChart, 100);
+        } catch (e) {
+          setError(e.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const initializeChart = () => {
+        if (!stats || !stats.interviewRecords) return;
+
+        const ctx = document.getElementById('performanceChart');
+        if (!ctx) return;
+
+        // Prepare chart data
+        const scores = stats.interviewRecords.slice(-10).map(record => record.score);
+        const labels = stats.interviewRecords.slice(-10).map((_, index) => `Q${index + 1}`);
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Performance Score',
+              data: scores,
+              borderColor: '#0d9488',
+              backgroundColor: 'rgba(13, 148, 136, 0.1)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 10,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.1)'
+                }
+              },
+              x: {
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.1)'
+                }
+              }
+            }
+          }
+        });
+      };
+
+      const calculateAverageScore = () => {
+        if (!stats || !stats.interviewRecords || stats.interviewRecords.length === 0) return 0;
+        const total = stats.interviewRecords.reduce((sum, record) => sum + record.score, 0);
+        return (total / stats.interviewRecords.length).toFixed(1);
+      };
+
+      const getTopStrengths = () => {
+        if (!stats || !stats.interviewRecords) return [];
+        const strengthsMap = {};
+        
+        stats.interviewRecords.forEach(record => {
+          record.strengths.forEach(strength => {
+            strengthsMap[strength] = (strengthsMap[strength] || 0) + 1;
+          });
+        });
+
+        return Object.entries(strengthsMap)
+          .sort(([,a], [,b]) => b - a)
+          .slice(0, 5)
+          .map(([strength, count]) => ({ strength, count }));
+      };
+
+      const getTopWeaknesses = () => {
+        if (!stats || !stats.interviewRecords) return [];
+        const weaknessMap = {};
+        
+        stats.interviewRecords.forEach(record => {
+          record.weaknesses.forEach(weakness => {
+            weaknessMap[weakness] = (weaknessMap[weakness] || 0) + 1;
+          });
+        });
+
+        return Object.entries(weaknessMap)
+          .sort(([,a], [,b]) => b - a)
+          .slice(0, 5)
+          .map(([weakness, count]) => ({ weakness, count }));
+      };
+
+      if (loading) {
+        return (
+          <div className="flex items-center justify-center min-h-96">
+            <div className="text-center">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading your dashboard...</p>
+            </div>
+          </div>
+        );
+      }
+
+      if (error) {
+        return (
+          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 text-center">
+            <svg className="w-12 h-12 text-destructive mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+            </svg>
+            <h3 className="text-lg font-semibold text-destructive mb-2">Error Loading Dashboard</h3>
+            <p className="text-destructive/80 mb-4">{error}</p>
+            <button
+              onClick={fetchUserStats}
+              className="btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="space-y-8">
+          {/* Welcome Section */}
+          <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+            <h1 className="heading-font text-3xl font-bold text-card-foreground mb-2">
+              Welcome back, {stats?.name || 'User'}! 👋
+            </h1>
+            <p className="text-muted-foreground">
+              Here's your interview performance overview
+            </p>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 primary-gradient rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-card-foreground">{stats?.interviewRecords?.length || 0}</p>
+                  <p className="text-sm text-muted-foreground">Interviews Completed</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 accent-gradient rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-card-foreground">{calculateAverageScore()}</p>
+                  <p className="text-sm text-muted-foreground">Average Score</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-card-foreground">
+                    {stats?.interviewRecords?.filter(r => r.score >= 7).length || 0}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Great Performances</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-card-foreground">
+                    {stats?.interviewRecords?.length > 1 ? 
+                      ((stats.interviewRecords[stats.interviewRecords.length - 1]?.score || 0) - 
+                       (stats.interviewRecords[0]?.score || 0) > 0 ? '+' : '') +
+                      ((stats.interviewRecords[stats.interviewRecords.length - 1]?.score || 0) - 
+                       (stats.interviewRecords[0]?.score || 0)).toFixed(1) : '0'
+                    }
+                  </p>
+                  <p className="text-sm text-muted-foreground">Improvement</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Performance Chart */}
+          <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+            <h2 className="heading-font text-xl font-semibold text-card-foreground mb-4">Performance Trend</h2>
+            <div className="h-80">
+              <canvas id="performanceChart"></canvas>
+            </div>
+          </div>
+
+          {/* Strengths and Weaknesses */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+              <h3 className="heading-font text-lg font-semibold text-card-foreground mb-4 flex items-center">
+                <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                </svg>
+                Top Strengths
+              </h3>
+              <div className="space-y-3">
+                {getTopStrengths().map((item, index) => (
+                  <div key={index} className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                    <span className="text-sm font-medium text-green-800">{item.strength}</span>
+                    <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full">
+                      {item.count} times
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+              <h3 className="heading-font text-lg font-semibold text-card-foreground mb-4 flex items-center">
+                <svg className="w-5 h-5 text-orange-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                </svg>
+                Areas to Improve
+              </h3>
+              <div className="space-y-3">
+                {getTopWeaknesses().map((item, index) => (
+                  <div key={index} className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <span className="text-sm font-medium text-orange-800">{item.weakness}</span>
+                    <span className="text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded-full">
+                      {item.count} times
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Interviews */}
+          <div className="bg-card rounded-xl p-6 border border-border card-shadow">
+            <h3 className="heading-font text-lg font-semibold text-card-foreground mb-4">Recent Interviews</h3>
+            <div className="space-y-4">
+              {stats?.interviewRecords?.slice(-5).reverse().map((record, index) => (
+                <div key={index} className="border border-border rounded-lg p-4 hover:bg-muted/50 transition-colors">
+                  <div className="flex justify-between items-start mb-2">
+                    <p className="font-medium text-card-foreground">{record.question}</p>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      record.score >= 8 ? 'bg-green-100 text-green-800' :
+                      record.score >= 6 ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {record.score}/10
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-2">{record.answer}</p>
+                  <p className="text-xs text-muted-foreground">{record.feedback}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('dashboard-root')).render(<Dashboard />);
+  </script>
+</body>
+</html>
