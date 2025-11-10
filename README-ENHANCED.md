@@ -63,7 +63,7 @@ MONGODB_URI=mongodb://localhost:27017/interview_simulator
 # OAuth2
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-REDIRECT_URI=https://atharvpandey13-2006-github-io-interview-1-kq9g.onrender.com/login/oauth2/code/google
+REDIRECT_URI=https://ai-nterview-simulator-main.onrender.com/login/oauth2/code/google
 
 # AI Service
 GEMINI_API_KEY=your-gemini-api-key
@@ -186,15 +186,68 @@ volumes:
 
 ## 🚀 Deployment
 
-### Render Deployment
-1. Connect your GitHub repository to Render
-2. Set environment variables in Render dashboard
-3. Deploy with automatic builds on push
+### Render Deployment (Step-by-Step)
+
+#### 1. Create Web Service on Render
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click "New +" → "Web Service"
+3. Connect your GitHub repository: `AtharvPandey13-2006/Ai-nterview-simulator-main`
+4. Configure the service:
+   - **Name**: `ai-interview-simulator` (or your preferred name)
+   - **Region**: Choose closest to your users
+   - **Branch**: `main`
+   - **Build Command**: Leave default (uses Dockerfile)
+   - **Start Command**: Leave default (uses Dockerfile CMD)
+
+#### 2. Set Environment Variables
+In the Render dashboard → Environment tab, add these environment variables:
+
+```
+GOOGLE_CLIENT_ID=your-google-client-id-from-cloud-console
+GOOGLE_CLIENT_SECRET=your-google-client-secret-from-cloud-console
+PORT=8080
+```
+
+**Important**: Replace the placeholder values above with your actual Google OAuth credentials from Google Cloud Console → APIs & Services → Credentials.
+
+**Note**: The MongoDB URI and Gemini API key are already hardcoded in `application.properties` for this deployment. In production, move these to environment variables as well for better security.
+
+#### 3. Configure Google Cloud Console OAuth
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Navigate to: APIs & Services → Credentials
+3. Select your OAuth 2.0 Client ID: `573720880005-0v8sj1s39ptmceoa4t49cmssoo513hvc.apps.googleusercontent.com`
+4. Add these Authorized redirect URIs (the ones you provided are already configured):
+   ```
+   https://ai-nterview-simulator-main.onrender.com/login/oauth2/code/google
+   https://ai-nterview-simulator-main.onrender.com/login
+   https://ai-nterview-simulator-main.onrender.com/login/
+   http://localhost:8080/login/oauth2/code/google
+   ```
+5. Save changes
+
+#### 4. Deploy
+- Click "Create Web Service" or "Manual Deploy"
+- Render will build the Docker image and deploy
+- Wait for deployment to complete (check logs for any errors)
+- Your app will be available at: `https://ai-nterview-simulator-main.onrender.com`
+
+#### 5. Verify OAuth Configuration
+After deployment:
+1. Visit your Render URL
+2. Click the login/authentication button
+3. You should be redirected to Google OAuth
+4. After successful login, you'll be redirected back to your app
+
+**Troubleshooting**:
+- If you see `invalid_client` error: Verify env vars are set correctly in Render
+- If OAuth fails: Check that redirect URIs match exactly in Google Console
+- If app won't start: Check Render logs for startup errors (missing env vars will fail fast)
 
 ### Netlify Frontend
 1. Build the frontend assets
-2. Deploy to Netlify with custom domain
+2. Deploy to Netlify with custom domain: `https://golden-swan-a56b79.netlify.app`
 3. Configure redirects for SPA routing
+4. Update CORS in `SecurityConfig.java` to include your Netlify domain
 
 ## 🧪 Testing
 

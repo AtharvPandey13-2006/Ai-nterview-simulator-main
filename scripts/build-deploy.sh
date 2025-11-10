@@ -130,7 +130,7 @@ deploy_local() {
     echo $! > app.pid
     print_status "Application started in background (PID: $(cat app.pid))"
     print_status "Logs available in app.log"
-    print_status "Application will be available at https://atharvpandey13-2006-github-io-interview-1-kq9g.onrender.com"
+    print_status "Application will be available at https://ai-nterview-simulator-main.onrender.com"
 }
 
 # Health check
@@ -140,7 +140,7 @@ health_check() {
     sleep 10  # Wait for application to start
     
     for i in {1..30}; do
-        if curl -s -o /dev/null -w "%{http_code}" https://atharvpandey13-2006-github-io-interview-1-kq9g.onrender.com/actuator/health | grep -q "200"; then
+        if curl -s -o /dev/null -w "%{http_code}" https://ai-nterview-simulator-main.onrender.com/actuator/health | grep -q "200"; then
             print_status "Application is healthy ✅"
             return 0
         fi

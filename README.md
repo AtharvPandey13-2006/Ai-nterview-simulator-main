@@ -14,6 +14,8 @@ Uses speech-to-text
 
 Provides instant feedback and suggestions
 
+📚 **For detailed setup and deployment instructions, see [README-ENHANCED.md](./README-ENHANCED.md)**
+
 🧠 Key Features
 ✅ Role Selection: Frontend, Backend, Full-Stack, etc.
 ✅ Dynamic Questions: Fetched in real-time from OpenAI
