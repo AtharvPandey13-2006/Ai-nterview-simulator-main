@@ -68,10 +68,10 @@ public class InterviewControllerTest {
                 .content(objectMapper.writeValueAsString(request))
                 .session(session))
                 .andExpect(status().isOk())
-                .andExpected(jsonPath("$.score").value(8))
-                .andExpected(jsonPath("$.strengths[0]").value("Clear answer"))
-                .andExpected(jsonPath("$.weaknesses[0]").value("Could be more specific"))
-                .andExpected(jsonPath("$.feedback").value("Good response"));
+                .andExpect(jsonPath("$.score").value(8))
+                .andExpect(jsonPath("$.strengths[0]").value("Clear answer"))
+                .andExpect(jsonPath("$.weaknesses[0]").value("Could be more specific"))
+                .andExpect(jsonPath("$.feedback").value("Good response"));
     }
 
     @Test
@@ -97,9 +97,9 @@ public class InterviewControllerTest {
         mockMvc.perform(get("/api/interview/score")
                 .session(session))
                 .andExpect(status().isOk())
-                .andExpected(jsonPath("$.score").value(15))
-                .andExpected(jsonPath("$.totalQuestions").value(2))
-                .andExpected(jsonPath("$.maxScore").value(20));
+                .andExpect(jsonPath("$.score").value(15))
+                .andExpect(jsonPath("$.totalQuestions").value(2))
+                .andExpect(jsonPath("$.maxScore").value(20));
     }
 
     @Test
@@ -117,8 +117,8 @@ public class InterviewControllerTest {
                 .content(objectMapper.writeValueAsString(request))
                 .session(session))
                 .andExpect(status().isOk())
-                .andExpected(jsonPath("$.score").value(5))
-                .andExpected(jsonPath("$.feedback").value("Please try to be more specific in your answer."));
+                .andExpect(jsonPath("$.score").value(5))
+                .andExpect(jsonPath("$.feedback").value("Please try to be more specific in your answer."));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class InterviewControllerTest {
                 .content(objectMapper.writeValueAsString(request))
                 .session(session))
                 .andExpect(status().isInternalServerError())
-                .andExpected(jsonPath("$.score").value(0))
-                .andExpected(jsonPath("$.feedback").value("Sorry, there was a technical issue. Please try again."));
+                .andExpect(jsonPath("$.score").value(0))
+                .andExpect(jsonPath("$.feedback").value("Sorry, there was a technical issue. Please try again."));
     }
 }
