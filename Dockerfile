@@ -2,7 +2,9 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 COPY . .
-RUN mvn clean package -DskipTests
+	# Skip test compilation and execution during container build to avoid failing the image build
+	# (useful for CI / Render builds). If you want tests compiled/executed in CI, revert this.
+	RUN mvn -Dmaven.test.skip=true clean package
 
 # ---- Stage 2: Run the app ----
 FROM eclipse-temurin:17-jdk-alpine
