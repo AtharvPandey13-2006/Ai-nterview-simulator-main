@@ -9,5 +9,9 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: PORT
-        value: 8080
+        value: 10000
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
     autoDeploy: true
